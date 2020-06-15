@@ -2,6 +2,9 @@ import { dbContext } from "../db/DbContext";
 import { BadRequest } from "../utils/Errors";
 
 class BugsService {
+  async delete(id) {
+    return await dbContext.Bugs.findByIdAndRemove(id);
+  }
   async getAll(query) {
     return await dbContext.Bugs.find();
   }

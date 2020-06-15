@@ -1,7 +1,7 @@
 <template>
-  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <nav class="navbar navbar-expand-lg navbar-light bg-info">
     <router-link class="navbar-brand" :to="{ name: 'Home' }"
-      >AppName</router-link
+      ><i class="fa fa-bug" aria-hidden="true"></i> Buggin</router-link
     >
     <button
       class="navbar-toggler"
@@ -60,9 +60,9 @@ export default {
     },
     async logout() {
       this.$store.dispatch("resetBearer");
-      await this.$auth.logout({returnTo: window.location.origin});
-    }
-  }
+      await this.$auth.logout({ returnTo: window.location.origin });
+    },
+  },
 };
 </script>
 

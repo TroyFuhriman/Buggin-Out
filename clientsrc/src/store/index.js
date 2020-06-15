@@ -35,6 +35,9 @@ export default new Vuex.Store({
     setNotes(state, notes) {
       state.notes = notes;
     },
+    addToBugs(state, bug) {
+      state.bugs.push(bug);
+    },
   },
   actions: {
     setBearer({}, bearer) {
@@ -61,11 +64,11 @@ export default new Vuex.Store({
         console.error(error);
       }
     },
-    async activeBug({ commit, dispatch }, bug) {
+    async activeBug({ commit, dispatch }, id) {
       try {
-        let res = await api.get("bugs/" + bug.id);
+        let res = await api.get("bugs/" + id);
         commit("activeBug", res.data);
-        dispatch("getNotes", bug);
+        dispatch("getNotes", res.data.id);
       } catch (error) {
         console.error(error);
       }
@@ -73,7 +76,9 @@ export default new Vuex.Store({
     async addBug({ commit, dispatch }, bug) {
       try {
         let res = await api.post("bugs", bug);
-        dispatch("getActiveBug", bug);
+        commit("addToBugs", res.data);
+        dispatch("activeBug", res.data._id);
+        router.push({ name: "ActiveBug", params: { id: res.data._id } });
       } catch (error) {
         console.error(error);
       }
@@ -82,7 +87,15 @@ export default new Vuex.Store({
       try {
         let res = await api.put("bugs/" + bug.id, bug);
         dispatch("getBugs");
-        dispatch("activeBug", bug.id);
+        // dispatch("activeBug", bug.id);
+      } catch (error) {
+        console.error(error);
+      }
+    },
+    async deleteBug({ commit, dispatch }, id) {
+      try {
+        let res = await api.delete("bugs/" + id);
+        dispatch("getBugs");
       } catch (error) {
         console.error(error);
       }
@@ -90,9 +103,9 @@ export default new Vuex.Store({
     //#endregion BUGS
 
     //#region NOTES
-    async getNotes({ commit, dispatch }, bug) {
+    async getNotes({ commit, dispatch }, id) {
       try {
-        let res = await api.get("bugs/" + bug.Id + "/notes");
+        let res = await api.get("bugs/" + id + "/notes");
         commit("setNotes", res.data);
       } catch (error) {
         console.error(error);
@@ -101,15 +114,18 @@ export default new Vuex.Store({
     async addNote({ commit, dispatch }, note) {
       try {
         let res = await api.post("notes", note);
-        dispatch("getNotes");
+        commit("setNotes", res.data);
+        dispatch("getNotes", note.bug);
       } catch (error) {
         console.error(error);
       }
     },
     async editNote({ commit, dispatch }, note) {
       try {
-        let res = await api.post("notes/" + note.id, note);
-        dispatch("getNotes");
+        let res = await api.put("notes/" + note.id, note);
+        console.log(note);
+
+        dispatch("getNotes", note.bug.id);
       } catch (error) {
         console.error(error);
       }
@@ -117,7 +133,7 @@ export default new Vuex.Store({
     async deleteNote({ commit, dispatch }, note) {
       try {
         let res = await api.delete("notes/" + note.id);
-        dispatch("getNotes");
+        dispatch("getNotes", note.bug.id);
       } catch (error) {
         console.error(error);
       }

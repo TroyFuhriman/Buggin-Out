@@ -5,6 +5,8 @@ import Home from "../Pages/Home.vue";
 // @ts-ignore
 import Profile from "../Pages/Profile.vue";
 import { authGuard } from "@bcwdev/auth0-vue";
+// @ts-ignore
+import ActiveBug from "../Pages/ActiveBug.vue";
 
 Vue.use(VueRouter);
 
@@ -18,6 +20,12 @@ const routes = [
     path: "/profile",
     name: "Profile",
     component: Profile,
+    beforeEnter: authGuard,
+  },
+  {
+    path: "/bugDetails/:id",
+    name: "ActiveBug",
+    component: ActiveBug,
     beforeEnter: authGuard,
   },
 ];

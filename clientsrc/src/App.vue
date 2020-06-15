@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div class="bg-light grow" id="app">
     <navbar />
     <router-view />
   </div>
@@ -18,13 +18,22 @@ export default {
     }
   },
   components: {
-    Navbar
-  }
+    Navbar,
+  },
 };
 </script>
 
 <style lang="scss">
-@import "./assets/simplex.scss";
+@import "./assets/lumen.scss";
 @import "bootstrap";
 // @import "./assets/_overrides.scss";
+
+#app {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+.grow {
+  flex-grow: 1;
+}
 </style>

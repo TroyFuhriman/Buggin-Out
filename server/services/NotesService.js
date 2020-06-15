@@ -2,8 +2,8 @@ import { dbContext } from "../db/DbContext";
 import { BadRequest } from "../utils/Errors";
 
 class NotesService {
-  async find(query) {
-    return await dbContext.Notes.find(query);
+  async find(query = {}) {
+    return await dbContext.Notes.find(query).populate("bug");
   }
   async getById(id) {
     let data = await dbContext.Notes.findById(id);
