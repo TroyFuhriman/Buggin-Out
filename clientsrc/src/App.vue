@@ -36,4 +36,7 @@ export default {
 .grow {
   flex-grow: 1;
 }
+.text-shadow {
+  text-shadow: 0.5px 0.5px black;
+}
 </style>

@@ -114,7 +114,6 @@ export default new Vuex.Store({
     async addNote({ commit, dispatch }, note) {
       try {
         let res = await api.post("notes", note);
-        commit("setNotes", res.data);
         dispatch("getNotes", note.bug);
       } catch (error) {
         console.error(error);

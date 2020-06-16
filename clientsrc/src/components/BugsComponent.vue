@@ -1,30 +1,33 @@
 <template>
-  <div class="bugs text-center border-bottom row mt-2">
-    <router-link
-      class="col-3"
-      :to="{ name: 'ActiveBug', params: { id: bug.id } }"
-    >
-      <div class=" ">
-        <h5>{{ bug.title }}</h5>
+  <div class="bugs text-center row justify-content-center">
+    <div class="col-12 bg-white py-3 mb-2">
+      <div class="row">
+        <router-link
+          class="col-3"
+          :to="{ name: 'ActiveBug', params: { id: bug.id } }"
+        >
+          <div class=" ">
+            <h5>{{ bug.title }}</h5>
+          </div>
+        </router-link>
+        <div class="col-3 ">
+          <h5>{{ bug.creatorEmail }}</h5>
+        </div>
+        <div class="col-3 ">
+          <h5>{{ new Date(bug.updatedAt).toLocaleDateString("en-US") }}</h5>
+        </div>
+        <div
+          v-if="profile.email == bug.creatorEmail"
+          type="button"
+          class="col-3"
+        >
+          <h5>{{ closed() }}</h5>
+        </div>
+        <div v-if="profile.email == !bug.creatorEmail" class="col-3">
+          <h5>{{ closed() }}</h5>
+          <button @click="deleteBug" class="btn btn-danger">delort</button>
+        </div>
       </div>
-    </router-link>
-    <div class="col-3 ">
-      <h5>{{ bug.creatorEmail }}</h5>
-    </div>
-    <div class="col-3 ">
-      <h5>{{ new Date(bug.updatedAt).toLocaleDateString("en-US") }}</h5>
-    </div>
-    <div
-      v-if="profile.email == bug.creatorEmail"
-      type="button"
-      @click="closeBug"
-      class="col-3"
-    >
-      <h5>{{ closed() }}</h5>
-    </div>
-    <div v-if="profile.email == !bug.creatorEmail" class="col-3">
-      <h5>{{ closed() }}</h5>
-      <button @click="deleteBug" class="btn btn-danger">delort</button>
     </div>
   </div>
 </template>

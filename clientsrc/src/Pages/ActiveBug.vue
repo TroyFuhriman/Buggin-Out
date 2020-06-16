@@ -61,27 +61,28 @@
       <!-- Button trigger modal -->
       <button
         type="button"
-        class="btn btn-primary col-3"
+        class="btn btn-primary"
         data-toggle="modal"
-        data-target="#staticBackdrop"
+        data-target="#exampleModal"
       >
-        Add Note
+        Tell us about this bug
       </button>
 
       <!-- Modal -->
       <div
         class="modal fade"
-        id="staticBackdrop"
-        data-backdrop="static"
+        id="exampleModal"
         tabindex="-1"
         role="dialog"
-        aria-labelledby="staticBackdropLabel"
+        aria-labelledby="exampleModalLabel"
         aria-hidden="true"
       >
         <div class="modal-dialog" role="document">
           <div class="modal-content">
             <div class="modal-header">
-              <h5 class="modal-title" id="staticBackdropLabel">Modal title</h5>
+              <h5 class="modal-title" id="exampleModalLabel">
+                What is it doing?!
+              </h5>
               <button
                 type="button"
                 class="close"
@@ -113,15 +114,19 @@
               >
                 Close
               </button>
-              <button @click="addNote" type="button" class="btn btn-primary">
-                Understood
+              <button
+                data-dismiss="modal"
+                @click="addNote"
+                class=" btn btn-success"
+              >
+                Post Note
               </button>
             </div>
           </div>
         </div>
       </div>
     </div>
-    <div class="row">
+    <div class="row justify-content-center">
       <notes v-for="note in notes" :key="note.id" :note="note" />
     </div>
   </div>
@@ -167,11 +172,25 @@ export default {
       };
     },
     closeBug() {
-      if (this.bug.closed == true) {
-        this.bug.closed = false;
-        this.$store.dispatch("closeBug", this.bug);
-      } else this.bug.closed = true;
-      this.$store.dispatch("closeBug", this.bug);
+      if (this.bug.closed == false) {
+        swal({
+          title: "Are you sure?",
+          text: "If you close the bug it will not be able to be undone!",
+          icon: "warning",
+          buttons: true,
+          dangerMode: true,
+        }).then((willDelete) => {
+          if (willDelete) {
+            swal("The Bug has been closed", {
+              icon: "success",
+            });
+            this.bug.closed = true;
+            this.$store.dispatch("closeBug", this.bug);
+          } else {
+            swal("More debugging to do!");
+          }
+        });
+      }
     },
     editBug() {
       this.$store.dispatch("closeBug", this.bug);

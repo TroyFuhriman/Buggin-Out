@@ -1,100 +1,48 @@
 <template>
   <div class="home container-fluid">
-    <div class="row justify-content-center mt-2 mb-2">
-      <!-- Button trigger modal -->
-      <button
-        type="button"
-        class="btn btn-primary"
-        data-toggle="modal"
-        data-target="#staticBackdrop"
-      >
-        Add A Bug
-      </button>
-
-      <!-- Modal -->
-      <div
-        class="modal fade"
-        id="staticBackdrop"
-        tabindex="-1"
-        role="dialog"
-        aria-labelledby="staticBackdropLabel"
-        aria-hidden="true"
-      >
-        <div class="modal-dialog" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="staticBackdropLabel">Add Bug</h5>
-              <button
-                type="button"
-                class="close"
-                data-dismiss="modal"
-                aria-label="Close"
-              >
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-            <div class="modal-body">
-              <form class=" form-group">
-                <div class="row justify-content-center mb-3">
-                  <input
-                    type="text"
-                    name="title"
-                    id="title"
-                    class=" form-control col-6"
-                    placeholder="Title..."
-                    aria-describedby="helpId"
-                    v-model="newBug.title"
-                    required
-                  />
-                </div>
-                <input
-                  type="text"
-                  name="description"
-                  id="description"
-                  class="form-control"
-                  placeholder="Description..."
-                  aria-describedby="helpId"
-                  v-model="newBug.description"
-                  required
-                />
-              </form>
-            </div>
-            <div class="modal-footer">
-              <button
-                type="button"
-                class="btn btn-secondary"
-                data-dismiss="modal"
-              >
-                Close
-              </button>
-              <button @click="addBug" class=" btn btn-success">
-                Submit
-              </button>
-            </div>
+    <div class="row justify-content-center">
+      <div class="col-12">
+        <div class="row justify-content-end">
+          <div class="col-3">
+            <span class="mr-2 text-right">Hide closed </span>
+            <input
+              class="btn btn-warning"
+              type="checkbox"
+              @click="filtered = !filtered"
+            />
+          </div>
+        </div>
+      </div>
+      <div class="col-10">
+        <div
+          class="row border bg-success text-light shadow text-shadow text-center"
+        >
+          <div class="col-3 border-right">
+            <h3>Title</h3>
+          </div>
+          <div class="col-3 border-right">
+            <h3>Found By</h3>
+          </div>
+          <div class="col-3 border-right">
+            <h3>Last Updated</h3>
+          </div>
+          <div v-if="!see" type="button" @click="sortC" class="col-3">
+            <h3>resolved <i class="fa fa-sort" aria-hidden="true"></i></h3>
+          </div>
+          <div v-if="see" type="button" @click="sortD" class="col-3">
+            <h3>resolved <i class="fa fa-sort" aria-hidden="true"></i></h3>
           </div>
         </div>
       </div>
     </div>
-    <div class="row border bg-white text-center">
-      <div class="col-3 border-right">
-        <h3>Title</h3>
+    <div class="row my-2 justify-content-center">
+      <div v-if="!filtered" class="col-10 border border-dark shadow">
+        <bugs v-for="bug in bugs" :key="bug.id" :bug="bug" />
       </div>
-      <div class="col-3 border-right">
-        <h3>Found By</h3>
-      </div>
-      <div class="col-3 border-right">
-        <h3>Last Updated</h3>
-      </div>
-      <div v-if="!see" type="button" @click="sortC" class="col-3">
-        <h3>resolved</h3>
-      </div>
-      <div v-if="see" type="button" @click="sortD" class="col-3">
-        <h3>resolved</h3>
+      <div v-if="filtered" class="col-10 border border-dark shadow">
+        <bugs v-for="bug in filteredBugs" :key="bug.id" :bug="bug" />
       </div>
     </div>
-    <span>
-      <bugs v-for="bug in bugs" :key="bug.id" :bug="bug" />
-    </span>
   </div>
 </template>
 
@@ -104,20 +52,19 @@ export default {
   name: "home",
   data() {
     return {
-      newBug: {},
       see: false,
+      filtered: false,
     };
   },
   computed: {
     bugs() {
       return this.$store.state.bugs;
     },
+    filteredBugs() {
+      return this.bugs.filter((bug) => bug.closed == false);
+    },
   },
   methods: {
-    addBug() {
-      this.$store.dispatch("addBug", { ...this.newBug });
-      this.newBug = {};
-    },
     sortC() {
       this.see = true;
       this.bugs.sort(function(a, b) {
@@ -145,6 +92,9 @@ export default {
         }
         return 0;
       });
+    },
+    filterBugs() {
+      return this.bugs.filter((bug) => bug.closed == false);
     },
   },
   components: {

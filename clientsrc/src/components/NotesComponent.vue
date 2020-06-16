@@ -1,5 +1,5 @@
 <template>
-  <div class="notes col-12">
+  <div class="notes mt-3 col-10">
     <div class="row">
       <div class="col text-center">
         <div class="card">
@@ -28,8 +28,8 @@
             <p class="card-text">{{ note.creatorEmail }}</p>
           </div>
           <div class="row justify-content-center">
-            <button @click="deleteNote" class="btn btn-danger col-2">
-              delete
+            <button @click="deleteNote" class="btn btn-danger col-1">
+              Delete
             </button>
           </div>
         </div>
@@ -55,7 +55,22 @@ export default {
       this.noteForm = false;
     },
     deleteNote() {
-      this.$store.dispatch("deleteNote", this.note);
+      swal({
+        title: "Are you sure?",
+        text: "Once deleted, you will not be able to recover this Note!",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true,
+      }).then((willDelete) => {
+        if (willDelete) {
+          swal("Your Note has been deleted!", {
+            icon: "success",
+          });
+          this.$store.dispatch("deleteNote", this.note);
+        } else {
+          swal("Your Note is safe!");
+        }
+      });
     },
   },
   components: {
