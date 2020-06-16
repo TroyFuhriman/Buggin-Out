@@ -27,17 +27,27 @@
           />
           <button type="submit" class="mt-3 btn btn-warning">Edit</button>
         </form>
-        <span type="button" v-if="!bug.closed" @click="bugForm = !bugForm">
-          <h2>
-            {{ bug.title }}
-          </h2>
-          <p>{{ bug.description }}</p>
-        </span>
         <span v-if="bug.closed">
           <h2>
             {{ bug.title }}
           </h2>
           <p>{{ bug.description }}</p>
+        </span>
+        <span v-if="!bug.closed">
+          <span v-if="profile.email == bug.creatorEmail">
+            <span type="button" @click="bugForm = !bugForm">
+              <h2>
+                {{ bug.title }}
+              </h2>
+              <p>{{ bug.description }}</p>
+            </span>
+          </span>
+          <span v-if="profile.email != bug.creatorEmail">
+            <h2>
+              {{ bug.title }}
+            </h2>
+            <p>{{ bug.description }}</p>
+          </span>
         </span>
         <p>found by: {{ bug.creatorEmail }}</p>
         <div

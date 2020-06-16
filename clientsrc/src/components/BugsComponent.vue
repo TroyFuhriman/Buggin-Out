@@ -16,16 +16,11 @@
         <div class="col-3 ">
           <h5>{{ new Date(bug.updatedAt).toLocaleDateString("en-US") }}</h5>
         </div>
-        <div
-          v-if="profile.email == bug.creatorEmail"
-          type="button"
-          class="col-3"
-        >
-          <h5>{{ closed() }}</h5>
+        <div v-if="profile.email == bug.creatorEmail" class="col-3">
+          <h5 id="close1">{{ closed() }}</h5>
         </div>
-        <div v-if="profile.email == !bug.creatorEmail" class="col-3">
-          <h5>{{ closed() }}</h5>
-          <button @click="deleteBug" class="btn btn-danger">delort</button>
+        <div v-if="profile.email != bug.creatorEmail" class="col-3">
+          <h5 id="close2">{{ closed() }}</h5>
         </div>
       </div>
     </div>
